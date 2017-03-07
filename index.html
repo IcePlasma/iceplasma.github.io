@@ -3,6 +3,811 @@
     Welcome!
   </title>
   <body bgcolor = black text = white link = yellow>
+<p> JavaScript Game:
+    <h1>Game_Test</h1>
+
+<p id="gameText">You find yourself in what appears to be a sandy desert. There appears to be a town to the North. What do you wish to do?</p>
+
+<p id="traversalButtons">
+<button type="button" onclick="traverseNorth()"> Go North</button>
+<button type="button" onclick="traverseSouth()"> Go South</button>
+<button type="button" onclick="traverseEast()"> Go East</button>
+<button type="button" onclick="traverseWest()"> Go West</button>
+</p>
+
+<br><br>
+<p id="eventButtons"></p>
+<br><br>
+<button type="button" onclick="displayInventory()"> Display Inventory</button>
+<button type="button" onclick="displayStatistics()"> Character Information</button>
+<button type="button" onclick="drinkWater()"> Drink Water</button>
+<p id="characterInfoString"></p>
+<p id="Position">Position = 1,5</p>
+
+
+
+<script>
+/*
+
+*/
+var tileMessages = new Array(12);
+tileMessages[0] = new Array(10);
+tileMessages[0] =
+["You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You see a large pit that appears to have been dug in the sand fairly recently. However, the sand buildup makes it difficult to tell if the pit contains anything.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert. Sand dunes stretch out before you.",
+"You are in the open desert. You see something shimmering to the North.",
+"You find yourself in an oasis."];
+
+tileMessages[1] = new Array(10);
+tileMessages[1] =
+["You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You see what looks like a town to the North.",
+"You see what appears to be a town ahead of you. There appears to be a large structure to the North of the town.",
+"You see a large, stone structure ahead of you.",
+"You are in the open desert.",
+"You are in the open desert."];
+
+tileMessages[2] = new Array(10);
+tileMessages[2] =
+["River.",
+"River.",
+"River.",
+"You are in the open desert. A river bends around you to the south and east.",
+"You are in the open desert. To the east, there is a river flowing south.",
+"You are in the open desert. To the east, you see a river.",
+"You are in the open desert. To the east, you spot what looks like a bridge.",
+"You are in the open desert. To the east, a river flows southward.",
+"You are in the open desert. To the east, water flows southward",
+"You are in the open desert."];
+
+tileMessages[3] = new Array(10);
+tileMessages[3] =
+["You are in the open desert. To the west, you see a southerly flowing river.",
+"You are in the open desert. To the west, you can see a river flowing south.",
+"You are in the open desert. To the west, river.",
+"River.",
+"River.",
+"River.",
+"You see a bridge ahead of you. Guards stand at both sides of it.",
+"River.",
+"River.",
+"River."];
+
+
+tileMessages[4] = new Array(10);
+tileMessages[4] =
+["You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert. A river to the west flows southward.",
+"You are in the open desert. You can see a river to the west",
+"You are in the open desert. There is a river to the west of your location.",
+"You are in the open desert. You can see a bridge to the west.",
+"You are in the open desert. In the distance, you can see a river to the west.",
+"You are in the open desert.",
+"You find the desicated corpse of what appears to have been a child. It is not obvious what may have killed them, but there is a chain around their neck. There is a river to the west."];
+
+
+tileMessages[5] = new Array(10);
+tileMessages[5] =
+["You are in the open desert.",
+"You spot something on the ground shimmering in the distance.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You find a small structure made of stone and wood. It is partially buried in the sand, but you think you could probably crawl your way through the entrance.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert."];
+
+
+tileMessages[6] = new Array(10);
+tileMessages[6] =
+["You spot a person in the distance.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You spot a person in the distance."];
+
+
+tileMessages[7] = new Array(10);
+tileMessages[7] =
+["You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert."];
+
+
+tileMessages[8] = new Array(10);
+tileMessages[8] =
+["You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You spot a person in the distance.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert."];
+
+
+tileMessages[9] = new Array(10);
+tileMessages[9] =
+["You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You discover an oasis hidden in the desert.",
+"You are in the open desert."];
+
+
+tileMessages[10] = new Array(10);
+tileMessages[10] =
+["You are in the open desert.",
+"You are in the open desert.",
+"You discover an oasis hidden in the desert.",
+"You spot what looks like a village in the distance.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You find what appears to be a hastily constructed structure made from wood and metal. The entrance is barred, but worn enough that you might be able to break it down.",
+"You are in the open desert."];
+
+
+tileMessages[11] = new Array(10);
+tileMessages[11] =
+["You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You see a sword sticking out from a rock in the distance."
+]; //End of tileMessages **************************************
+
+
+//Beginning of tileEvents. ************************************
+var tileEvents = new Array(12);
+tileEvents[0] = new Array(10);
+tileEvents[0] =
+["",
+"",
+"",
+"<button type=\"button\" onclick=\"investigateMassGrave()\"> Investigate Pit</button>",
+"",
+"",
+"",
+"",
+"",
+"<button type=\"button\" onclick=\"getWater()\"> Stock Up On Water</button>"];
+
+tileEvents[1] = new Array(10);
+tileEvents[1] =
+["",
+"",
+"",
+"",
+"",
+"",
+"<button type=\"button\" onclick=\"enterTown()\"> Enter Town</button>",
+"<button type=\"button\" onclick=\"investigateStone()\"> Investigate Structure</button>", //Not implemented.
+"",
+""];
+
+tileEvents[2] = new Array(10);
+tileEvents[2] =
+["",
+"",
+"",
+"",
+"",
+"",
+"",
+"",
+"",
+""];
+
+tileEvents[3] = new Array(10);
+tileEvents[3] =
+["",
+"",
+"",
+"",
+"",
+"",
+"<button type=\"button\" onclick=\"talkToGuards()\"> Talk To Guards</button>",
+"",
+"",
+""];
+
+
+tileEvents[4] = new Array(10);
+tileEvents[4] =
+["",
+"",
+"",
+"",
+"",
+"",
+"",
+"",
+"",
+"<button type=\"button\" onclick=\"searchChildBody()\"> Search Body</button>"]; //Not implemented.
+
+
+tileEvents[5] = new Array(10);
+tileEvents[5] =
+["",
+"<button type=\"button\" onclick=\"approachShimmering()\"> Approach Shimmering</button>", //Not implemented.
+"",
+"",
+"",
+"",
+"<button type=\"button\" onclick=\"crawlInStructure()\"> Try To Crawl In</button>", //Not implemented.
+"",
+"",
+""];
+
+
+tileEvents[6] = new Array(10);
+tileEvents[6] =
+["<button type=\"button\" onclick=\"friendlySav()\"> Approach Person</button>", //Not implemented.
+"",
+"",
+"",
+"",
+"",
+"",
+"",
+"",
+"<button type=\"button\" onclick=\"savageMan()\"> Approach Person</button>"]; //Not implemented.
+
+
+tileEvents[7] = new Array(10);
+tileEvents[7] =
+["",
+"",
+"",
+"",
+"",
+"",
+"",
+"",
+"",
+""];
+
+
+tileEvents[8] = new Array(10);
+tileEvents[8] =
+["",
+"",
+"",
+"",
+"",
+"<button type=\"button\" onclick=\"savageHunter()\"> Approach Person</button>", //Not implemented.
+"",
+"",
+"",
+""];
+
+
+tileEvents[9] = new Array(10);
+tileEvents[9] =
+["",
+"",
+"",
+"",
+"",
+"",
+"",
+"",
+"<button type=\"button\" onclick=\"getWater()\"> Stock Up On Water</button>",
+""];
+
+
+tileEvents[10] = new Array(10);
+tileEvents[10] =
+["",
+"",
+"<button type=\"button\" onclick=\"getWater()\"> Stock Up On Water</button>",
+"<button type=\"button\" onclick=\"approachVillage()\"> Approach Village</button>", //Not implemented.
+"",
+"",
+"",
+"",
+"<button type=\"button\" onclick=\"forceEntryToResidence()\"> Try To Force The Door</button>", //Not implemented.
+""];
+
+
+tileEvents[11] = new Array(10);
+tileEvents[11] =
+["",
+"",
+"",
+"",
+"",
+"",
+"",
+"",
+"",
+"<button type=\"button\" onclick=\"pullSword()\"> Pull at Sword </button>" //Not implemented.
+]; //End of tileEvents
+
+var gameText = document.getElementById("gameText"), characterInfo = document.getElementById("characterInfoString");
+var position = document.getElementById("Position"), eventText = document.getElementById("eventButtons");
+var traversalButtons = document.getElementById("traversalButtons");
+var previousDirection = '';
+var metGuards = false, enteredTown = false, oldManTalked = false;
+var displayMessage = "", tempChar = '', riverImpass = "You feel as though swimming might be a bad idea.<br>";
+var character = {
+    race: '', inventory: "", position: [1, 5], hasPistol: true, hasHatchet: true, ammunition: 6, water: 3,
+    health: 100, hydration: 100, maxHydration: 100, stamina: 100, strength: 10, money: 40, extraWater: 0
+};
+
+    //O = Oasis, D = Desert, R = River, P = person, S = Sword, C = Corpse, U = dUngeon, V = Village, T = Town,
+    //M = Magic_Spring, G = mass_Grave, W = bridge_West, E = bridge_East, B = Bridge.
+var charMap = new Array(12);
+charMap[9] = new Array(10);
+charMap[9] = ['O', 'D', 'D', 'R', 'C', 'D', 'P', 'D', 'D', 'D', 'D', 'S'];
+charMap[8] = new Array(10);
+charMap[8] = ['D', 'D', 'D', 'R', 'D', 'D', 'D', 'D', 'D', 'O', 'U', 'D'];
+charMap[7] = new Array(10);
+charMap[7] = ['D', 'U', 'D', 'R', 'D', 'D', 'D', 'D', 'D', 'D', 'D', 'D'];
+charMap[6] = new Array(10);
+charMap[6] = ['D', 'T', 'W', 'B', 'E', 'D', 'D', 'D', 'D', 'D', 'D', 'D'];
+charMap[5] = new Array(10);
+charMap[5] = ['D', 'D', 'D', 'R', 'D', 'D', 'D', 'D', 'P', 'D', 'D', 'D'];
+charMap[4] = new Array(10);
+charMap[4] = ['D', 'D', 'D', 'R', 'D', 'D', 'D', 'D', 'D', 'D', 'D', 'D'];
+charMap[3] = new Array(10);
+charMap[3] = ['G', 'D', 'D', 'R', 'D', 'D', 'D', 'D', 'D', 'D', 'V', 'D'];
+charMap[2] = new Array(10);
+charMap[2] = ['D', 'D', 'R', 'D', 'D', 'D', 'D', 'D', 'D', 'D', 'O', 'D'];
+charMap[1] = new Array(10);
+charMap[1] = ['D', 'D', 'R', 'D', 'D', 'D', 'D', 'D', 'D', 'D', 'D', 'D'];
+charMap[0] = new Array(10);
+charMap[0] = ['D', 'D', 'R', 'D', 'D', 'D', 'P', 'D', 'D', 'D', 'D', 'D'];
+
+function death()
+{
+    gameText.innerHTML = "You are dead. Your corpse may be found in later years, but will likely be buried in the sand. You'll certainly never be seen alive again.";
+    eventText.innerHTML = "";
+    characterInfo.innerHTML = "";
+    position.innerHTML = "";
+    traversalButtons.innerHTML = "";
+}
+
+function addCurrentTileMessage()
+{
+    //Index of the current tile message is the right side of this equation.
+    displayMessage += tileMessages[character.position[0]][character.position[1]];
+}
+
+function triggerEvent()
+{
+    eventText.innerHTML = tileEvents[character.position[0]][character.position[1]];
+}
+
+
+function traverseNorth()
+{
+    displayMessage = "";
+    if (character.position[1] < 9)
+    {
+        tempChar = charMap[character.position[1] + 1][character.position[0]];
+    }
+    else
+    {
+        tempChar = '';
+    }
+    //Bounds checking.
+    if (character.position[1] < 9 && tempChar != 'R')
+    {
+        displayMessage += "You've gone North. ";
+        character.position[1]++;
+        moveReductions();
+        if (character.health > 0)
+        {
+            triggerEvent();
+        }
+    }
+    else if (tempChar == 'R')
+    {
+        displayMessage += riverImpass;
+    }
+    else 
+    {
+        displayMessage += "You feel as though traveling farther North will lead to your untimely death, so you decide against it.<br>";
+    }
+    if (character.health > 0)
+    {
+        addCurrentTileMessage();
+        gameText.innerHTML = displayMessage;
+        displayMessage = "";
+        displayPosition();
+    }
+}
+function traverseSouth()
+{
+    displayMessage = "";
+    if (character.position[1] > 0)
+    {
+        tempChar = charMap[character.position[1] - 1][character.position[0]];
+    }
+    else
+    {
+        tempChar = '';
+    }
+    //Bounds checking.
+    if (character.position[1] > 0 && tempChar != 'R') 
+    {
+        displayMessage += "You've gone South. ";
+        character.position[1]--;
+        moveReductions();
+        if (character.health > 0)
+        {
+            triggerEvent();
+        }
+    }
+    else if (tempChar == 'R')
+    {
+        displayMessage += riverImpass;
+    }
+    else
+    {
+        displayMessage += "You feel as though traveling farther South will lead to your untimely death, so you decide against it.<br>";
+    }
+    if (character.health > 0)
+    {
+        addCurrentTileMessage();
+        gameText.innerHTML = displayMessage;
+        displayMessage = "";
+        displayPosition();
+    }
+}
+function traverseEast()
+{
+    displayMessage = "";
+    if (character.position[0] < 11)
+    {
+        tempChar = charMap[character.position[1]][character.position[0] + 1];
+    }
+    else
+    {
+        tempChar = '';
+    }
+    //Bounds checking.
+    if (character.position[0] < 11 && tempChar != 'R' && (tempChar != 'E' || previousDirection != 'E'))
+    {
+        displayMessage += "You've gone East. ";
+        character.position[0]++;
+        moveReductions();
+        if (character.health > 0)
+        {
+            previousDirection = 'E';
+            triggerEvent();
+        }
+    }
+    else if (tempChar == 'R')
+    {
+        displayMessage += riverImpass;
+    }
+    else if (tempChar == 'E')
+    {
+        displayMessage += "You feel as though the guards might stop you if you just try to walk by them.<br>";
+    }
+    else 
+    {
+        displayMessage += "You feel as though traveling farther East will lead to your untimely death, so you decide against it.<br>";
+    }
+    if (character.health > 0)
+    {
+        addCurrentTileMessage();
+        gameText.innerHTML = displayMessage;
+        displayMessage = "";
+        displayPosition();
+    }
+}
+function traverseWest()
+{
+    displayMessage = "";
+    if (character.position[0] > 0)
+    {
+        tempChar = charMap[character.position[1]][character.position[0] - 1];
+    }
+    else
+    {
+        tempChar = '';
+    }
+    //Bounds checking.
+    if (character.position[0] > 0 && tempChar != 'R' && (tempChar != 'W' || previousDirection != 'W'))
+    {
+        displayMessage += "You've gone West. ";
+        character.position[0]--;
+        moveReductions();
+        if (character.health >= 0)
+        {
+            previousDirection = 'W';
+            triggerEvent();
+        }
+    }
+    else if (tempChar == 'R')
+    {
+        displayMessage += riverImpass;
+    }
+    else if (tempChar == 'W')
+    {
+        displayMessage += "You feel as though the guards might stop you if you just try to walk by them.<br>";
+    }
+    else 
+    {
+        displayMessage += "You feel as though traveling farther West will lead to your untimely death, so you decide against it.<br>";
+    }
+
+    if (character.health >= 0)
+    {
+        addCurrentTileMessage();
+        gameText.innerHTML = displayMessage;
+        displayMessage = "";
+        displayPosition();
+    }
+}
+
+function determineInventoryString() 
+{
+    character.inventory = "Water In Container Quantity = " + character.water + "<br>";
+    if (character.hasHatchet == true) 
+    {
+        character.inventory += "Hatchet<br>";
+    }
+    if (character.hasPistol == true) 
+    {
+        character.inventory += "Pistol<br>";
+    }
+    if (character.ammunition > 0) 
+    {
+        character.inventory += "Bullets Quantity = " + character.ammunition + "<br>";
+    }
+}
+function displayInventory() 
+{
+    determineInventoryString();
+    characterInfo.innerHTML = character.inventory;
+}
+function displayStatistics() 
+{
+    var stats = "Health = " + character.health + "<br>Hydration = " + character.hydration +
+    "<br>Stamina = " + character.stamina + "<br>Strength = " + character.strength;
+    characterInfo.innerHTML = stats;
+}
+
+function displayPosition()
+{
+    position.innerHTML = "Position = " + character.position[0] + ", " + character.position[1];
+}
+//Adjusts character stat values for after a move has occurred.
+function moveReductions() {
+    characterInfo.innerHTML = "";
+    var statChanges = "";
+    var staminaChanges = 0;
+    var waterChanges = 0;
+    var healthChanges = 0;
+    var hydrationChanges = 0;
+    var reducer = 0;
+        if (character.hydration >= 7) {
+            character.hydration -= 7;
+            hydrationChanges -= 7;
+        }
+        else {
+            reducer = 10 - character.hydration;
+            character.health -= reducer;
+            character.stamina -= reducer;
+            healthChanges -= reducer;
+            staminaChanges -= reducer;
+            hydrationChanges -= character.hydration;
+            character.hydration = 0;
+        }
+    //Stamina goes down faster if hydration level is lower.
+    reducer = 2 + (10 - character.hydration / 10);
+    reducer <<= 1;
+    reducer >>= 1;
+    //If character's stamina is high enough, reduce it by normal amount.
+    if (character.stamina >= reducer) {
+        character.stamina -= reducer;
+        staminaChanges -= reducer;
+    }
+        //Otherwise, reduce health by (reducer's value - stamina's value) and set stamina to 0.
+    else {
+        reducer -= character.stamina;
+        character.stamina = 0;
+        character.health -= reducer;
+        healthChanges -= reducer;
+    }
+    if (character.health <= 0)
+    {
+        death();
+    }
+    else
+    {
+        if (waterChanges != 0) {
+            statChanges += "<br>Water Change: " + waterChanges;
+        }
+        if (hydrationChanges != 0) {
+            statChanges += "<br>Hydration Change: " + hydrationChanges;
+        }
+        if (healthChanges != 0) {
+            statChanges += "<br>Health Change: " + healthChanges;
+        }
+        if (staminaChanges != 0) {
+            statChanges += "<br>stamina Change: " + staminaChanges;
+        }
+        characterInfo.innerHTML = statChanges;
+    }
+};
+
+function talkToGuards()
+{
+    gameText.innerHTML = "You see a group of people that appear to be gaurding the bridge. They carry rifles."
+    if (previousDirection == 'E' && metGuards == false)
+    {
+        eventText.innerHTML = "\"Woah there traveller! You seem to be headed into the savage lands."
+        + " Before you go, make sure that you are prepared for battle and travel.\" You pass over the bridge.";
+        metGuards = true;
+        previousDirection = 'W';
+    }
+    else if (previousDirection == 'W')
+    {
+        eventText.innerHTML = "\"I see you're back from the savage lands. Hope you killed" 
+         + " some of them while you were out there. They've been acting uppity lately.\" You pass over the bridge.";
+        previousDirection = 'E';
+    }
+    else
+    {
+        eventText.innerHTML = "\"Good to see you again. Hope you're heading out to clean up some savages.\" You pass over the bridge.";
+        previousDirection = 'W';
+    }
+}
+
+function talkToOldManInTown()
+{
+    oldManTalked = true;
+    gameText.innerHTML = "\"You seem new here. This is the town of Forden on the edge of the Empire. If you need a place to stay, try the building over there. If you need work, try that one.\"";
+    eventText.innerHTML = "\<button type=\"button\" onclick=\"lookForWork()\"> Look For Work</button\> \<button type=\"button\" onclick=\"stayAtInn()\"> Find A Place To Rest</button\>"
+         + "\<button type=\"button\" onclick=\"getWater()\"> Get Water From Well</button\>";
+}
+
+function knockOnDoor()
+{
+    gameText.innerHTML = "There's no answer. You find yourself in a small town that appears to have only a few buildings. You see an old man standing near an alleyway.";
+}
+
+function stayAtInn()
+{
+    if (character.money >= 4)
+    {
+        character.stamina = 100;
+        character.health += character.hydration;
+        if (character.health > 100)
+            character.health = 100;
+        var temporary_Integer = 40 - character.hydration;
+        if (temporary_Integer >= 40)
+            character.stamina -= temporary_Integer;
+        character.hydration -= 10;
+    }
+    else
+    {
+        gameText.innerHTML = "You lack the funds to stay anywhere.";
+    }  
+}
+
+function getWater()
+{
+    character.hydration = character.maxHydration;
+    character.water = 3 + character.extraWater;
+}
+
+function drinkWater()
+{
+    if (character.water > 0)
+    {
+        character.water--;
+        character.hydration = character.maxHydration;
+    }
+    else
+    {
+        gameText.innerHTML = "You don't have any water.";
+    }
+}
+
+function lookForWork()
+{
+    if(character.stamina >= 40 && character.hydration >= 40)
+    {
+        character.hydration -= 40;
+        character.stamina -= 40;
+        character.money += 6;
+        if (character.strength < 16)
+            character.strength += 1;
+    }
+    else if (character.hydration <= 40)
+    {
+        gameText.innerHTML = "You should drink some water before you think about working.";
+    }
+    else
+    {
+        gameText.innerHTML = "You're too tired to work.";
+    }
+}
+
+function enterTown()
+{
+    if (oldManTalked == false)
+    {
+        gameText.innerHTML = "You find yourself in a small town that appears to have only a few buildings. You see an old man standing near an alleyway.";
+        eventText.innerHTML = "\<button type=\"button\" onclick=\"talkToOldManInTown()\"> Talk To Old Man</button\> \<button type=\"button\" onclick=\"knockOnDoor()\"> Knock On A Door</button\> "
+        + "\<button type=\"button\" onclick=\"getWater()\"> Get Water From Well</button\>";
+    }
+    else
+    {
+        gameText.innerHTML = "You find yourself in the town of Forden.";
+        eventText.innerHTML = "\<button type=\"button\" onclick=\"lookForWork()\"> Look For Work</button\> \<button type=\"button\" onclick=\"stayAtInn()\"> Find A Place To Rest</button\>" 
+         + "\<button type=\"button\" onclick=\"getWater()\"> Get Water From Well</button\>";
+    }
+}
+
+function drinkMagicSpring()
+{
+    tileMessages[5][1] = "You are in the open desert.";
+    tileEvents[5][1] = "";
+    character.health = 100;
+    character.stamina = 100;
+    character.strength += 5;
+    character.maxHydration += 10;
+    character.hydration = character.maxHydration;
+    gameText.innerHTML = "\"When you drink from the pool, you feel faint. You pass out. Some time later, you wake up. It takes you a few moments before you realize the pool is gone.\"";
+    eventText.innerHTML = "";
+    character.extraWater += 1;
+    character.water = 3 + character.extraWater;
+}
+
+function approachShimmering()
+{
+    gameText.innerHTML = "\"As you appraoch the shimmering, it becomes clear to you that it is a pool of water that is reflecting the light of the sun. You feel a strange compulsion to drink from it.\"";
+    eventText.innerHTML = "\<button type=\"button\" onclick=\"drinkMagicSpring()\"> Drink From the Pool</button\>";
+}
+
+</script>
   <table>
       <tr>
       <td>
@@ -109,381 +914,6 @@
           </td>
         </tr>
   </table>
-  <p>JavaScript Game</p>
-    <p id="gameText">You find yourself in what appears to be a sandy desert. There appears to be a town to the North. What do you wish to do?</p>
-
-<button type="button" onclick="traverseNorth()"> Go North</button>
-<button type="button" onclick="traverseSouth()"> Go South</button>
-<button type="button" onclick="traverseEast()"> Go East</button>
-<button type="button" onclick="traverseWest()"> Go West</button>
-
-<br><br>
-<button type="button" onclick="displayInventory()"> Display Inventory</button>
-<button type="button" onclick="displayStatistics()"> Character Information</button>
-<p id="characterInfoString"></p>
-<p id="Position">Position = 1,5</p>
-
-
-
-<script>
-/*
-
-*/
-var tileMessages = new Array(12);
-tileMessages[0] = new Array(10);
-tileMessages[0] =
-["You are in the open desert.",
-"You are in the open desert.",
-"You are in the open desert.",
-"You see a large pit that appears to have been dug in the sand fairly recently. However, the sand buildup makes it difficult to tell if the pit contains anything.",
-"You are in the open desert.",
-"You are in the open desert.",
-"You are in the open desert.",
-"You are in the open desert. Sand dunes stretch out before you.",
-"You are in the open desert. You see something shimmering to the North.",
-"You find yourself in an oasis."]
-
-tileMessages[1] = new Array(10);
-tileMessages[1] =
-["You are in the open desert.",
-"You are in the open desert.",
-"You are in the open desert.",
-"You are in the open desert.",
-"You are in the open desert.",
-"You are in the open desert.",
-"You see what appears to be a town ahead of you. There appears to be a large structure to the North of the town.",
-"You see a large, stone structure ahead of you.",
-"You are in the open desert.",
-"You are in the open desert."];
-
-tileMessages[2] = new Array(10);
-tileMessages[2] =
-["River.",
-"River.",
-"River.",
-"You are in the open desert.",
-"You are in the open desert.",
-"You are in the open desert.",
-"You are in the open desert.",
-"You are in the open desert.",
-"You are in the open desert.",
-"You are in the open desert."];
-
-tileMessages[3] = new Array(10);
-tileMessages[3] =
-["You are in the open desert.",
-"You are in the open desert.",
-"You are in the open desert.",
-"River.",
-"River.",
-"River.",
-"You see a bridge ahead of you. Guards stand at both sides it.",
-"River.",
-"River.",
-"River."];
-
-
-tileMessages[4] = new Array(10);
-tileMessages[4] =
-["You are in the open desert.",
-"You are in the open desert.",
-"You are in the open desert.",
-"You are in the open desert.",
-"You are in the open desert.",
-"You are in the open desert.",
-"You are in the open desert.",
-"You are in the open desert.",
-"You are in the open desert.",
-"You find the desicated corpse of what appears to have been a child. It is not obvious what may have killed them, but there is a chain around their neck."];
-
-
-tileMessages[5] = new Array(10);
-tileMessages[5] =
-["You are in the open desert.",
-"You spot something on the ground shimmering in the distance.",
-"You are in the open desert.",
-"You are in the open desert.",
-"You are in the open desert.",
-"You are in the open desert.",
-"You find a small structure made of stone and wood. It is partially buried in the sand, but you think you could probably crawl your way through the entrance.",
-"You are in the open desert.",
-"You are in the open desert.",
-"You are in the open desert."];
-
-
-tileMessages[6] = new Array(10);
-tileMessages[6] =
-["You spot a person in the distance.",
-"You are in the open desert.",
-"You are in the open desert.",
-"You are in the open desert.",
-"You are in the open desert.",
-"You are in the open desert.",
-"You are in the open desert.",
-"You are in the open desert.",
-"You are in the open desert.",
-"You spot a person in the distance."]
-
-
-tileMessages[7] = new Array(10);
-tileMessages[7] =
-["You are in the open desert.",
-"You are in the open desert.",
-"You are in the open desert.",
-"You are in the open desert.",
-"You are in the open desert.",
-"You are in the open desert.",
-"You are in the open desert.",
-"You are in the open desert.",
-"You are in the open desert.",
-"You are in the open desert."]
-
-
-tileMessages[8] = new Array(10);
-tileMessages[8] =
-["You are in the open desert.",
-"You are in the open desert.",
-"You are in the open desert.",
-"You are in the open desert.",
-"You are in the open desert.",
-"You spot a person in the distance.",
-"You are in the open desert.",
-"You are in the open desert.",
-"You are in the open desert.",
-"You are in the open desert."]
-
-
-tileMessages[9] = new Array(10);
-tileMessages[9] =
-["You are in the open desert.",
-"You are in the open desert.",
-"You are in the open desert.",
-"You are in the open desert.",
-"You are in the open desert.",
-"You are in the open desert.",
-"You are in the open desert.",
-"You are in the open desert.",
-"You discover an oasis hidden in the desert.",
-"You are in the open desert."]
-
-
-tileMessages[10] = new Array(10);
-tileMessages[10] =
-["You are in the open desert.",
-"You are in the open desert.",
-"You discover an oasis hidden in the desert.",
-"You spot what looks like a village in the distance.",
-"You are in the open desert.",
-"You are in the open desert.",
-"You are in the open desert.",
-"You are in the open desert.",
-"You find what appears to be a hastily constructed structure made from wood and metal. The entrance is barred, but worn enough that you might be able to break it down.",
-"You are in the open desert."]
-
-
-tileMessages[11] = new Array(10);
-tileMessages[11] =
-["You are in the open desert.",
-"You are in the open desert.",
-"You are in the open desert.",
-"You are in the open desert.",
-"You are in the open desert.",
-"You are in the open desert.",
-"You are in the open desert.",
-"You are in the open desert.",
-"You are in the open desert.",
-"You see a sword sticking out from a rock in the distance."
-]; //End of tileMessages
-
-var displayMessage = "";
-var character = {
-    race: '', inventory: "", position: [1, 5], hasPistol: true, hasHatchet: true, ammunition: 6, water: 3,
-    health: 100, hydration: 100, stamina: 100, strength: 10
-};
-
-function addCurrentTileMessage()
-{
-    //Index of the current tile message is the right side of this equation.
-    displayMessage += tileMessages[character.position[0]] [character.position[1]];
-}
-
-function traverseNorth()
-{
-    displayMessage = "";
-    //Bounds checking.
-    if (character.position[1] < 9) {
-        //document.getElementById("gameText").innerHTML = "You've gone North";
-        displayMessage += "You've gone North. ";
-        character.position[1]++;
-        moveReductions();
-    }
-    else 
-    {
-        displayMessage += "You feel as though traveling farther North will lead to your untimely death, so you decide against it.<br>";
-    }
-    addCurrentTileMessage();
-    document.getElementById("gameText").innerHTML = displayMessage;
-    displayMessage = "";
-    displayPosition();
-}
-function traverseSouth()
-{
-    displayMessage = "";
-    //Bounds checking.
-    if (character.position[1] > 0) 
-    {
-        displayMessage += "You've gone South. ";
-        character.position[1]--;
-        moveReductions();
-    }
-    else
-    {
-        displayMessage += "You feel as though traveling farther South will lead to your untimely death, so you decide against it.<br>";
-    }
-    addCurrentTileMessage();
-    document.getElementById("gameText").innerHTML = displayMessage;
-    displayMessage = "";
-    displayPosition();
-}
-function traverseEast()
-{
-    displayMessage = "";
-    //Bounds checking.
-    if (character.position[0] < 11) 
-    {
-        displayMessage += "You've gone East. ";
-        character.position[0]++;
-        moveReductions();
-    }
-    else 
-    {
-        displayMessage += "You feel as though traveling farther East will lead to your untimely death, so you decide against it.<br>";
-    }
-    addCurrentTileMessage();
-    document.getElementById("gameText").innerHTML = displayMessage;
-    displayMessage = "";
-    displayPosition();
-}
-function traverseWest()
-{
-    displayMessage = "";
-    //Bounds checking.
-    if (character.position[0] > 0) 
-    {
-        displayMessage += "You've gone West. ";
-        character.position[0]--;
-        moveReductions();
-    }
-    else 
-    {
-        displayMessage += "You feel as though traveling farther West will lead to your untimely death, so you decide against it.<br>";
-    }
-    addCurrentTileMessage();
-    document.getElementById("gameText").innerHTML = displayMessage;
-    displayMessage = "";
-    displayPosition();
-}
-function determineInventoryString() 
-{
-    character.inventory = "Water In Container Quantity = " + character.water + "<br>";
-    if (character.hasHatchet == true) 
-    {
-        character.inventory += "Hatchet<br>";
-    }
-    if (character.hasPistol == true) 
-    {
-        character.inventory += "Pistol<br>";
-    }
-    if (character.ammunition > 0) 
-    {
-        character.inventory += "Bullets Quantity = " + character.ammunition + "<br>";
-    }
-}
-function displayInventory() 
-{
-    determineInventoryString();
-    document.getElementById("characterInfoString").innerHTML = character.inventory;
-}
-function displayStatistics() 
-{
-    var stats = "Health = " + character.health + "<br>Hydration = " + character.hydration +
-    "<br>Stamina = " + character.stamina + "<br>Strength = " + character.strength;
-    document.getElementById("characterInfoString").innerHTML = stats;
-}
-
-function displayPosition()
-{
-    document.getElementById("Position").innerHTML = "Position = " + character.position[0] + ", " + character.position[1];
-}
-//Adjusts character stat values for after a move has occurred.
-function moveReductions() 
-{
-    var statChanges = "";
-    var staminaChanges = 0;
-    var waterChanges = 0;
-    var healthChanges = 0;
-    var hydrationChanges = 0;
-    var reducer = 0;
-    if (character.water > 0) 
-    {
-        character.water--;
-        waterChanges--;
-    }
-    else 
-    {
-        if (character.hydration >= 7) 
-        {
-            character.hydration -= 7;
-            hydrationChanges -= 7;
-        }
-        else 
-        {
-            reducer = 10 - character.hydration;
-            character.health -= reducer;
-            character.stamina -= reducer;
-            healthChanges -= reducer;
-            staminaChanges -= reducer;
-            hydrationChanges -= character.hydration;
-            character.hydration = 0;
-        }
-    }
-    //Stamina goes down faster if hydration level is lower.
-    reducer = 2 + (10 - character.hydration / 10);
-    reducer <<= 1;
-    reducer >>= 1;
-    //If character's stamina is high enough, reduce it by normal amount.
-    if (character.stamina >= reducer) 
-    {
-        character.stamina -= reducer;
-        staminaChanges -= reducer;
-    }
-        //Otherwise, reduce health by (reducer's value - stamina's value) and set stamina to 0.
-    else 
-    {
-        reducer -= character.stamina;
-        character.stamina = 0;
-        character.health -= reducer;
-        healthChanges -= reducer;
-    }
-    if (waterChanges != 0) 
-    {
-        statChanges += "<br>Water Change: " + waterChanges;
-    }
-    if (hydrationChanges != 0) 
-    {
-        statChanges += "<br>Hydration Change: " + hydrationChanges;
-    }
-    if (healthChanges != 0) 
-    {
-        statChanges += "<br>Health Change: " + healthChanges;
-    }
-    if (staminaChanges != 0) 
-    {
-        statChanges += "<br>stamina Change: " + staminaChanges;
-    }
-    document.getElementById("characterInfoString").innerHTML = statChanges;
-}
-</script>
 
   </body>
 </html>
