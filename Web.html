@@ -1,0 +1,1227 @@
+<!DOCTYPE html>
+<html>
+<body bgcolor = black text ="white">
+
+<h1>Game_Test</h1>
+
+<p id="gameText">You find yourself in what appears to be a sandy desert. There appears to be a town to the North. What do you wish to do?</p>
+
+<p id="traversalButtons">
+<button type="button" onclick="traverseNorth()"> Go North</button>
+<button type="button" onclick="traverseSouth()"> Go South</button>
+<button type="button" onclick="traverseEast()"> Go East</button>
+<button type="button" onclick="traverseWest()"> Go West</button>
+</p>
+
+<br><br>
+<p id="eventButtons"></p>
+<br><br>
+<button type="button" onclick="displayInventory()"> Display Inventory</button>
+<button type="button" onclick="displayStatistics()"> Character Information</button>
+<button type="button" onclick="drinkWater()"> Drink Water</button>
+<button type="button" onclick="restOutside()"> Rest Outside</button>
+<p id="characterInfoString"></p>
+<p id="Position">Position = 1,5</p>
+
+<script>
+var tileMessages = new Array(12);
+tileMessages[0] = new Array(10);
+tileMessages[0] =
+["You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You see a large pit that appears to have been dug in the sand fairly recently. However, the sand buildup makes it difficult to tell if the pit contains anything.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert. Sand dunes stretch out before you.",
+"You are in the open desert. You see something shimmering to the North.",
+"You find yourself in an oasis."];
+
+tileMessages[1] = new Array(10);
+tileMessages[1] =
+["You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You see what looks like a town to the North.",
+"You see what appears to be a town ahead of you. There appears to be a large structure to the North of the town.",
+"You see a large, stone structure ahead of you.",
+"You are in the open desert.",
+"You are in the open desert."];
+
+tileMessages[2] = new Array(10);
+tileMessages[2] =
+["River.",
+"River.",
+"River.",
+"You are in the open desert. A river bends around you to the South and East.",
+"You are in the open desert. To the East, there is a river flowing South.",
+"You are in the open desert. To the East, you see a river.",
+"You are in the open desert. To the East, you spot what looks like a bridge.",
+"You are in the open desert. To the East, a river flows Southward.",
+"You are in the open desert. To the East, water flows Southward",
+"You are in the open desert."];
+
+tileMessages[3] = new Array(10);
+tileMessages[3] =
+["You are in the open desert. To the West, you see a Southerly flowing river.",
+"You are in the open desert. To the West, you can see a river flowing South.",
+"You are in the open desert. To the West and North, river.",
+"River.",
+"River.",
+"River.",
+"You see a bridge ahead of you. Guards stand at both sides of it.",
+"River.",
+"River.",
+"River."];
+
+
+tileMessages[4] = new Array(10);
+tileMessages[4] =
+["You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert. A river to the West flows Southward.",
+"You are in the open desert. You can see a river to the West",
+"You are in the open desert. There is a river to the West of your location.",
+"You are in the open desert. You can see a bridge to the West.",
+"You are in the open desert. In the distance, you can see a river to the West.",
+"You are in the open desert.",
+"You find the desiccated corpse of what appears to have been a child. It is not obvious what may have killed them, but there is a chain around their neck. There is a river to the West."];
+
+
+tileMessages[5] = new Array(10);
+tileMessages[5] =
+["You are in the open desert.",
+"You spot something on the ground shimmering in the distance.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You find a small structure made of stone and wood. It is partially buried in the sand, but you think you could probably crawl your way through the entrance.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert."];
+
+
+tileMessages[6] = new Array(10);
+tileMessages[6] =
+["You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You spot a person in the distance."];
+
+
+tileMessages[7] = new Array(10);
+tileMessages[7] =
+["You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert."];
+
+
+tileMessages[8] = new Array(10);
+tileMessages[8] =
+["You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You spot a person in the distance.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert."];
+
+
+tileMessages[9] = new Array(10);
+tileMessages[9] =
+["You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You discover an oasis hidden in the desert.",
+"You are in the open desert."];
+
+
+tileMessages[10] = new Array(10);
+tileMessages[10] =
+["You are in the open desert.",
+"You are in the open desert.",
+"You discover an oasis hidden in the desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You find what appears to be a hastily constructed structure made from wood and metal. The entrance is barred, but worn enough that you might be able to break it down.",
+"You are in the open desert."];
+
+
+tileMessages[11] = new Array(10);
+tileMessages[11] =
+["You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You are in the open desert.",
+"You see a sword sticking out from a rock in the distance."
+]; //End of tileMessages **************************************
+
+
+//Beginning of tileEvents. ************************************
+var tileEvents = new Array(12);
+tileEvents[0] = new Array(10);
+tileEvents[0] =
+["",
+"",
+"",
+"<button type=\"button\" onclick=\"investigateMassGrave()\"> Investigate Pit</button>",
+"",
+"",
+"",
+"",
+"",
+"<button type=\"button\" onclick=\"getWater()\"> Stock Up On Water</button>"];
+
+tileEvents[1] = new Array(10);
+tileEvents[1] =
+["",
+"",
+"",
+"",
+"",
+"",
+"<button type=\"button\" onclick=\"enterTown()\"> Enter Town</button>",
+"<button type=\"button\" onclick=\"investigateStone()\"> Investigate Structure</button>", //Not implemented.
+"",
+""];
+
+tileEvents[2] = new Array(10);
+tileEvents[2] =
+["",
+"",
+"",
+"",
+"",
+"",
+"",
+"",
+"",
+""];
+
+tileEvents[3] = new Array(10);
+tileEvents[3] =
+["",
+"",
+"",
+"",
+"",
+"",
+"<button type=\"button\" onclick=\"talkToGuards()\"> Talk To Guards</button> <button type=\"button\" onclick=\"attackGuards()\"> Attack Guards</button>",
+"",
+"",
+""];
+
+
+tileEvents[4] = new Array(10);
+tileEvents[4] =
+["",
+"",
+"",
+"",
+"",
+"",
+"",
+"",
+"",
+"<button type=\"button\" onclick=\"searchChildBody()\"> Search Body</button>"]; //Not implemented.
+
+
+tileEvents[5] = new Array(10);
+tileEvents[5] =
+["",
+"<button type=\"button\" onclick=\"approachShimmering()\"> Approach Shimmering</button>", //Not implemented.
+"",
+"",
+"",
+"",
+"<button type=\"button\" onclick=\"crawlInStructure()\"> Try To Crawl In</button>", //Not implemented.
+"",
+"",
+""];
+
+
+tileEvents[6] = new Array(10);
+tileEvents[6] =
+["", //Not implemented.
+"",
+"",
+"",
+"",
+"",
+"",
+"",
+"",
+"<button type=\"button\" onclick=\"savageMan()\"> Approach Person</button>"]; //Not implemented.
+
+
+tileEvents[7] = new Array(10);
+tileEvents[7] =
+["",
+"",
+"",
+"",
+"",
+"",
+"",
+"",
+"",
+""];
+
+
+tileEvents[8] = new Array(10);
+tileEvents[8] =
+["",
+"",
+"",
+"",
+"",
+"<button type=\"button\" onclick=\"savageHunter()\"> Approach Person</button>", //Not implemented.
+"",
+"",
+"",
+""];
+
+
+tileEvents[9] = new Array(10);
+tileEvents[9] =
+["",
+"",
+"",
+"",
+"",
+"",
+"",
+"",
+"<button type=\"button\" onclick=\"getWater()\"> Stock Up On Water</button>",
+""];
+
+
+tileEvents[10] = new Array(10);
+tileEvents[10] =
+["",
+"",
+"<button type=\"button\" onclick=\"getWater()\"> Stock Up On Water</button>",
+"", //Not implemented.
+"",
+"",
+"",
+"",
+"<button type=\"button\" onclick=\"forceEntryToResidence()\"> Try To Force The Door</button>", //Not implemented.
+""];
+
+
+tileEvents[11] = new Array(10);
+tileEvents[11] =
+["",
+"",
+"",
+"",
+"",
+"",
+"",
+"",
+"",
+"<button type=\"button\" onclick=\"pullSword()\"> Pull at Sword </button>" //Not implemented.
+]; //End of tileEvents
+
+
+
+var gameText = document.getElementById("gameText"), characterInfo = document.getElementById("characterInfoString");
+var position = document.getElementById("Position"), eventText = document.getElementById("eventButtons");
+var traversalButtons = document.getElementById("traversalButtons");
+var previousDirection = '';
+var metGuards = false, enteredTown = false, oldManTalked = false;
+var displayMessage = "", tempChar = '', riverImpass = "You feel as though swimming might be a bad idea.<br>";
+var movementLock = false, guardsAlive = true, killedFamily = false, savageHunterAlive = true;
+var character = {
+    race: '', inventory: "", position: [1, 5], hasPistol: true, ammunition: 6, water: 3,
+    health: 100, hydration: 100, maxHydration: 100, stamina: 100, strength: 10, money: 40, extraWater: 0, hasSword: false,
+    hasEnemy: false, lookedForWork: false, robbedFamily: false, swordKills: 0
+};
+
+    //O = Oasis, D = Desert, R = River, P = person, S = Sword, C = Corpse, U = dUngeon, V = Village, T = Town,
+    //M = Magic_Spring, G = mass_Grave, W = bridge_West, E = bridge_East, B = Bridge.
+var charMap = new Array(12);
+charMap[9] = new Array(10);
+charMap[9] = ['O', 'D', 'D', 'R', 'C', 'D', 'P', 'D', 'D', 'D', 'D', 'S'];
+charMap[8] = new Array(10);
+charMap[8] = ['D', 'D', 'D', 'R', 'D', 'D', 'D', 'D', 'D', 'O', 'U', 'D'];
+charMap[7] = new Array(10);
+charMap[7] = ['D', 'U', 'D', 'R', 'D', 'D', 'D', 'D', 'D', 'D', 'D', 'D'];
+charMap[6] = new Array(10);
+charMap[6] = ['D', 'T', 'W', 'B', 'E', 'D', 'D', 'D', 'D', 'D', 'D', 'D'];
+charMap[5] = new Array(10);
+charMap[5] = ['D', 'D', 'D', 'R', 'D', 'D', 'D', 'D', 'P', 'D', 'D', 'D'];
+charMap[4] = new Array(10);
+charMap[4] = ['D', 'D', 'D', 'R', 'D', 'D', 'D', 'D', 'D', 'D', 'D', 'D'];
+charMap[3] = new Array(10);
+charMap[3] = ['G', 'D', 'D', 'R', 'D', 'D', 'D', 'D', 'D', 'D', 'D', 'D'];
+charMap[2] = new Array(10);
+charMap[2] = ['D', 'D', 'R', 'D', 'D', 'D', 'D', 'D', 'D', 'D', 'O', 'D'];
+charMap[1] = new Array(10);
+charMap[1] = ['D', 'D', 'R', 'D', 'D', 'D', 'D', 'D', 'D', 'D', 'D', 'D'];
+charMap[0] = new Array(10);
+charMap[0] = ['D', 'D', 'R', 'D', 'D', 'D', 'P', 'D', 'D', 'D', 'D', 'D'];
+
+function death()
+{
+    gameText.innerHTML = "You are dead. Your corpse may be found in later years, but will likely be buried in the sand. You'll certainly never be seen alive again.";
+    eventText.innerHTML = "";
+    characterInfo.innerHTML = "";
+    position.innerHTML = "";
+    traversalButtons.innerHTML = "";
+}
+
+function addCurrentTileMessage()
+{
+    //Index of the current tile message is the right side of this equation.
+    displayMessage += tileMessages[character.position[0]][character.position[1]];
+}
+
+function triggerEvent()
+{
+    eventText.innerHTML = tileEvents[character.position[0]][character.position[1]];
+}
+
+
+function traverseNorth()
+{
+    if (movementLock == false) 
+    {
+        displayMessage = "";
+        if (character.position[1] < 9) 
+        {
+            tempChar = charMap[character.position[1] + 1][character.position[0]];
+        }
+        else 
+        {
+            tempChar = '';
+        }
+        //Bounds checking.
+        if (character.position[1] < 9 && tempChar != 'R') 
+        {
+            displayMessage += "You've gone North. ";
+            character.position[1]++;
+            moveReductions();
+            if (character.health > 0) 
+            {
+                triggerEvent();
+            }
+        }
+        else if (tempChar == 'R') 
+        {
+            displayMessage += riverImpass;
+        }
+        else 
+        {
+            displayMessage += "You feel as though traveling farther North will lead to your untimely death, so you decide against it.<br>";
+        }
+        if (character.health > 0) 
+        {
+            addCurrentTileMessage();
+            gameText.innerHTML = displayMessage;
+            displayMessage = "";
+            displayPosition();
+        }
+    }
+    else
+    {
+        gameText.innerHTML = "The situation doesn't really allow you to move freely. ";
+    }
+}
+
+function traverseSouth()
+{
+    if (movementLock == false) 
+    {
+        displayMessage = "";
+        if (character.position[1] > 0)
+        {
+            tempChar = charMap[character.position[1] - 1][character.position[0]];
+        }
+        else
+        {
+            tempChar = '';
+        }
+        //Bounds checking.
+        if (character.position[1] > 0 && tempChar != 'R') 
+        {
+            displayMessage += "You've gone South. ";
+            character.position[1]--;
+            moveReductions();
+            if (character.health > 0)
+            {
+                triggerEvent();
+            }
+        }
+        else if (tempChar == 'R')
+        {
+            displayMessage += riverImpass;
+        }
+        else
+        {
+            displayMessage += "You feel as though traveling farther South will lead to your untimely death, so you decide against it.<br>";
+        }
+        if (character.health > 0)
+        {
+            addCurrentTileMessage();
+            gameText.innerHTML = displayMessage;
+            displayMessage = "";
+            displayPosition();
+        }
+    }
+    else
+    {
+        gameText.innerHTML = "The situation doesn't really allow you to move freely. ";
+    }
+}
+function traverseEast()
+{
+    if (movementLock == false) 
+    {
+        displayMessage = "";
+        if (character.position[0] < 11)
+        {
+            tempChar = charMap[character.position[1]][character.position[0] + 1];
+        }
+        else
+        {
+            tempChar = '';
+        }
+        //Bounds checking.
+        if (character.position[0] < 11 && tempChar != 'R' && (tempChar != 'E' || previousDirection != 'E'))
+        {
+            displayMessage += "You've gone East. ";
+            character.position[0]++;
+            moveReductions();
+            if (character.health > 0)
+            {
+                previousDirection = 'E';
+                triggerEvent();
+            }
+        }
+        else if (tempChar == 'R')
+        {
+            displayMessage += riverImpass;
+        }
+        else if (tempChar == 'E')
+        {
+            displayMessage += "You feel as though the guards might stop you if you just try to walk by them.<br>";
+        }
+        else 
+        {
+            displayMessage += "You feel as though traveling farther East will lead to your untimely death, so you decide against it.<br>";
+        }
+        if (character.health > 0)
+        {
+            addCurrentTileMessage();
+            gameText.innerHTML = displayMessage;
+            displayMessage = "";
+            displayPosition();
+        }
+    }
+    else
+    {
+        gameText.innerHTML = "The situation doesn't really allow you to move freely. ";
+    }
+}
+function traverseWest()
+{
+    if (movementLock == false) 
+    {
+        displayMessage = "";
+        if (character.position[0] > 0)
+        {
+            tempChar = charMap[character.position[1]][character.position[0] - 1];
+        }
+        else
+        {
+            tempChar = '';
+        }
+        //Bounds checking.
+        if (character.position[0] > 0 && tempChar != 'R' && (tempChar != 'W' || previousDirection != 'W'))
+        {
+            displayMessage += "You've gone West. ";
+            character.position[0]--;
+            moveReductions();
+            if (character.health >= 0)
+            {
+                previousDirection = 'W';
+                triggerEvent();
+            }
+        }
+        else if (tempChar == 'R')
+        {
+            displayMessage += riverImpass;
+        }
+        else if (tempChar == 'W')
+        {
+            displayMessage += "You feel as though the guards might stop you if you just try to walk by them.<br>";
+        }
+        else 
+        {
+            displayMessage += "You feel as though traveling farther West will lead to your untimely death, so you decide against it.<br>";
+        }
+
+        if (character.health >= 0)
+        {
+            addCurrentTileMessage();
+            gameText.innerHTML = displayMessage;
+            displayMessage = "";
+            displayPosition();
+        }
+    }
+    else
+    {
+        gameText.innerHTML = "The situation doesn't really allow you to move freely. ";
+    }
+}
+
+function determineInventoryString() 
+{
+    character.inventory = "Water In Container Quantity = " + character.water + "<br>";
+    if (character.hasSword == true)
+    {
+        character.inventory += "Sword<br>";
+    }
+    if (character.hasPistol == true) 
+    {
+        character.inventory += "Pistol<br>";
+    }
+    if (character.ammunition > 0) 
+    {
+        character.inventory += "Bullets Quantity = " + character.ammunition + "<br>";
+    }
+    if (character.money > 0) {
+        character.inventory += "Money = " + character.money + "<br>";
+    }
+}
+
+function displayInventory() 
+{
+    determineInventoryString();
+    characterInfo.innerHTML = character.inventory;
+}
+
+function displayStatistics() 
+{
+    var stats = "Health = " + character.health + "<br>Hydration = " + character.hydration +
+    "<br>Stamina = " + character.stamina + "<br>Strength = " + character.strength;
+    if (character.swordKills > 0)
+    {
+        stats += "<br>Sword Murders = " + character.swordKills;
+    }
+    characterInfo.innerHTML = stats;
+}
+
+function displayPosition()
+{
+    position.innerHTML = "Position = " + character.position[0] + ", " + character.position[1];
+}
+
+//Adjusts character stat values for after a move has occurred.
+function moveReductions() {
+    characterInfo.innerHTML = "";
+    var statChanges = "";
+    var staminaChanges = 0;
+    var waterChanges = 0;
+    var healthChanges = 0;
+    var hydrationChanges = 0;
+    var reducer = 0;
+        if (character.hydration >= 7) {
+            character.hydration -= 7;
+            hydrationChanges -= 7;
+        }
+        else {
+            reducer = 10 - character.hydration;
+            character.health -= reducer;
+            character.stamina -= reducer;
+            healthChanges -= reducer;
+            staminaChanges -= reducer;
+            hydrationChanges -= character.hydration;
+            character.hydration = 0;
+        }
+    //Stamina goes down faster if hydration level is lower.
+    reducer = 2 + (10 - character.hydration / 10);
+    reducer <<= 1;
+    reducer >>= 1;
+    //If character's stamina is high enough, reduce it by normal amount.
+    if (character.stamina >= reducer) {
+        character.stamina -= reducer;
+        staminaChanges -= reducer;
+    }
+        //Otherwise, reduce health by (reducer's value - stamina's value) and set stamina to 0.
+    else {
+        reducer -= character.stamina;
+        character.stamina = 0;
+        character.health -= reducer;
+        healthChanges -= reducer;
+    }
+    if (character.health <= 0)
+    {
+        death();
+    }
+    else
+    {
+        if (waterChanges != 0) {
+            statChanges += "<br>Water Change: " + waterChanges;
+        }
+        if (hydrationChanges != 0) {
+            statChanges += "<br>Hydration Change: " + hydrationChanges;
+        }
+        if (healthChanges != 0) {
+            statChanges += "<br>Health Change: " + healthChanges;
+        }
+        if (staminaChanges != 0) {
+            statChanges += "<br>stamina Change: " + staminaChanges;
+        }
+        characterInfo.innerHTML = statChanges;
+    }
+};
+
+function talkToGuards()
+{
+    if (guardsAlive == true)
+    {
+        gameText.innerHTML = "You see a group of people that appear to be gaurding the bridge. They carry rifles."
+        if (previousDirection == 'E' && metGuards == false)
+        {
+            eventText.innerHTML = "\"Woah there traveller! You seem to be headed into the savage lands."
+            + " Before you go, make sure that you are prepared for battle and travel.\" You pass over the bridge.";
+            metGuards = true;
+            previousDirection = 'W';
+        }
+        else if (previousDirection == 'W')
+        {
+            eventText.innerHTML = "\"I see you're back from the savage lands. Hope you killed"
+             + " some of them while you were out there. They've been acting uppity lately.\" You pass over the bridge.";
+            previousDirection = 'E';
+        }
+        else
+        {
+            eventText.innerHTML = "\"Good to see you again. Hope you're heading out to clean up some savages.\" You pass over the bridge.";
+            previousDirection = 'W';
+        }
+    }
+    else
+    {
+        eventText.innerHTML = "There are no guards to talk to. You know why. ";
+    }
+}
+
+function talkToOldManInTown()
+{
+    oldManTalked = true;
+    gameText.innerHTML = "\"You seem new here. This is the town of Forden on the edge of the Empire. If you need a place to stay, try the building over there. If you need work, try that one.\"";
+    eventText.innerHTML = "\<button type=\"button\" onclick=\"lookForWork()\"> Look For Work</button\> \<button type=\"button\" onclick=\"stayAtInn()\"> Find A Place To Rest</button\>"
+         + "\<button type=\"button\" onclick=\"getWater()\"> Get Water From Well</button\>";
+}
+
+function knockOnDoor()
+{
+    gameText.innerHTML = "There's no answer. You find yourself in a small town that appears to have only a few buildings. You see an old man standing near an alleyway.";
+}
+
+function stayAtInn()
+{
+    if (character.money >= 4)
+    {
+        character.lookedForWork = false;
+        character.stamina = 100;
+        character.health += character.hydration;
+        if (character.health > 100)
+            character.health = 100;
+        var temporary_Integer = 30 - character.hydration;
+        if (temporary_Integer >= 30)
+            character.stamina -= temporary_Integer;
+        character.hydration -= 10;
+        character.money -= 4;
+    }
+    else
+    {
+        gameText.innerHTML = "You lack the funds to stay anywhere.";
+    }  
+}
+
+function getWater()
+{
+    character.hydration = character.maxHydration;
+    character.water = 3 + character.extraWater;
+}
+
+function drinkWater()
+{
+    if (character.water > 0)
+    {
+        character.water--;
+        character.hydration = character.maxHydration;
+    }
+    else
+    {
+        gameText.innerHTML = "You don't have any water.";
+    }
+}
+
+function lookForWork()
+{
+    if (character.stamina >= 40 && character.hydration >= 40) {
+        if (character.lookedForWork == false) {
+            character.lookedForWork = true;
+            var tempInt = getRandomInt(0, 4);
+            switch (tempInt) {
+                case 0:
+                    gameText.innerHTML = "After asking around, you are offered a job helping to move some cargo onto a ship. The pay seems better than what you would normally expect for this amount of work. Do you accept the job?";
+                    eventText.innerHTML = "\<button type=\"button\" onclick=\"acceptJobZero()\"> Yes</button\> \<button type=\"button\" onclick=\"declineJob()\"> No</button\>";
+                    break;
+                case 1:
+                    gameText.innerHTML = "After asking around, you are offered a job helping a farmer. He needs someone to make sure his workers do their work because the usual person is sick. Do you accept the job?";
+                    eventText.innerHTML = "\<button type=\"button\" onclick=\"acceptJobOne()\"> Yes</button\> \<button type=\"button\" onclick=\"declineJob()\"> No</button\>";
+                    break;
+                case 2:
+                    gameText.innerHTML = "After asking around, you are offered a job hunting. They want you to bring back some meat for them. Do you accept the job?";
+                    eventText.innerHTML = "\<button type=\"button\" onclick=\"acceptJobTwo()\"> Yes</button\> \<button type=\"button\" onclick=\"declineJob()\"> No</button\>";
+                    break;
+                case 3:
+                    gameText.innerHTML = "After asking around, you are offered a job working as a guard at the prison. Do you accept the job?";
+                    eventText.innerHTML = "\<button type=\"button\" onclick=\"acceptJobThree()\"> Yes</button\> \<button type=\"button\" onclick=\"declineJob()\"> No</button\>";
+                    break;
+                case 4:
+                    gameText.innerHTML = "After asking around, you are offered a job moving a load of cargo onto a ship. Do you accept the job?";
+                    eventText.innerHTML = "\<button type=\"button\" onclick=\"acceptJobFour()\"> Yes</button\> \<button type=\"button\" onclick=\"declineJob()\"> No</button\>";
+                    break;
+                default:
+                    break;
+            }
+        }
+        else {
+            gameText.innerHTML = "After asking around, you are unable to find any other work today. ";
+        }
+    }
+    else if (character.hydration < 40) {
+        gameText.innerHTML = "You should drink some water before you think about working.";
+    }
+    else {
+        gameText.innerHTML = "You're too tired to work.";
+    }
+}
+
+function getRandomInt(min, max)
+{
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function acceptJobZero()
+{
+    doWork();
+    gameText.innerHTML = "You help to carry crates onto a ship. Sometimes you hear moans coming from the crates. ";
+}
+
+function acceptJobOne()
+{
+    doWork();
+    gameText.innerHTML = "You whip the workers whenever they stop working. A few of them pass out over the course of the day. ";
+}
+
+function acceptJobTwo()
+{
+    doWork();
+    gameText.innerHTML = "You manage to bring in 5 birds over the course of the day. ";
+}
+
+function acceptJobThree()
+{
+    doWork();
+    gameText.innerHTML = "You stand guard over the cells in the prison. Several times, a prisoner seems to be asking you to do something, but you don't understand what they are saying. Part of the way through the day, they begin to cry. ";
+}
+
+function acceptJobFour()
+{
+    doWork();
+    gameText.innerHTML = "You spend several hours carrying cargo onto a ship. ";
+}
+
+function declineJob()
+{
+    gameText.innerHTML = "You find yourself in the town of Forden.";
+    eventText.innerHTML = "\<button type=\"button\" onclick=\"lookForWork()\"> Look For Work</button\> \<button type=\"button\" onclick=\"stayAtInn()\"> Find A Place To Rest</button\>"
+    + "\<button type=\"button\" onclick=\"getWater()\"> Get Water From Well</button\>";
+}
+
+function doWork()
+{
+    character.hydration -= 40;
+    character.stamina -= 40;
+    character.money += 6;
+    if (character.strength < 15)
+        character.strength += 1;
+    eventText.innerHTML = "\<button type=\"button\" onclick=\"lookForWork()\"> Look For Work</button\> \<button type=\"button\" onclick=\"stayAtInn()\"> Find A Place To Rest</button\>"
+    + "\<button type=\"button\" onclick=\"getWater()\"> Get Water From Well</button\>";
+}
+
+function enterTown()
+{
+    if (oldManTalked == false)
+    {
+        gameText.innerHTML = "You find yourself in a small town that appears to have only a few buildings. You see an old man standing near an alleyway.";
+        eventText.innerHTML = "\<button type=\"button\" onclick=\"talkToOldManInTown()\"> Talk To Old Man</button\> \<button type=\"button\" onclick=\"knockOnDoor()\"> Knock On A Door</button\> "
+        + "\<button type=\"button\" onclick=\"getWater()\"> Get Water From Well</button\>";
+    }
+    else
+    {
+        gameText.innerHTML = "You find yourself in the town of Forden.";
+        eventText.innerHTML = "\<button type=\"button\" onclick=\"lookForWork()\"> Look For Work</button\> \<button type=\"button\" onclick=\"stayAtInn()\"> Find A Place To Rest</button\>" 
+         + "\<button type=\"button\" onclick=\"getWater()\"> Get Water From Well</button\>";
+    }
+}
+
+function drinkMagicSpring()
+{
+    tileMessages[5][1] = "You are in the open desert.";
+    tileEvents[5][1] = "";
+    character.health = 100;
+    character.stamina = 100;
+    character.strength += 5;
+    character.maxHydration += 10;
+    character.hydration = character.maxHydration;
+    gameText.innerHTML = "\"When you drink from the pool, you feel faint. You pass out. Some time later, you wake up. It takes you a few moments before you realize the pool is gone.\"";
+    eventText.innerHTML = "";
+    character.extraWater += 1;
+    character.water = 3 + character.extraWater;
+}
+
+function approachShimmering()
+{
+    gameText.innerHTML = "As you appraoch the shimmering, it becomes clear to you that it is a pool of water that is reflecting the light of the sun. You feel a strange compulsion to drink from it.";
+    eventText.innerHTML = "\<button type=\"button\" onclick=\"drinkMagicSpring()\"> Drink From the Pool</button\>";
+}
+
+function crawlInStructure()
+{
+    gameText.innerHTML = "Immediately upon entering, you see remnants of shattered bones litter the floor. There are also the borken remains of furniture.";
+    eventText.innerHTML = "\<button type=\"button\" onclick=\"searchCrawlStructure()\"> Search The Building</button\> ";
+}
+
+function searchCrawlStructure()
+{
+    gameText.innerHTML = "After a thourough search of the building, you find more broken objects. There is nothing you feel like taking with you. ";
+    eventText.innerHTML = "\<button type=\"button\" onclick=\"searchCrawlStructure()\"> Search The Building</button\> ";
+}
+
+function forceEntryToResidence()
+{
+    movementLock = true;
+    if (killedFamily != true)
+    {
+        gameText.innerHTML = "You are able to force the door open. You see a group of terrified people inside. What do you do?";
+        eventText.innerHTML = "\<button type=\"button\" onclick=\"robFamily()\"> Rob Them</button\> <button type=\"button\" onclick=\"attackFamily()\"> Attack Them</button\> <button type=\"button\" onclick=\"leaveFamily()\"> Leave</button\> ";
+    }
+    else
+    {
+        gameText.innerHTML = "You are able to force the door open. You see the dead bodies of the people you murdered. ";
+        eventText.innerHTML = "<button type=\"button\" onclick=\"leaveFamily()\"> Leave</button\> ";
+        character.ammunition -= 6;
+    }  
+}
+
+
+function robFamily()
+{
+    if (robFamily != true)
+    {
+        gameText.innerHTML = "You are able to take their water, money, and food by threatening them with your pistol. ";
+        getWater();
+        character.money += 4;
+        eobFamily = true;
+    }
+    else
+    {
+        gameText.innerHTML = "You've already robbed them and they don't appear to have anything more. ";
+    }
+}
+
+function attackFamily()
+{
+    killedFamily = true;
+    hasEnemy = true;
+    if (character.hasSword)
+    {
+        gameText.innerHTML = "You take your sword out and step towards the family. Most of them cower against the wall, but one of them stands in front of you and tries to defend them. You stab"
+        + " the sword into their gut and bring it upwards. Their body falls to the floor with their insides and blood falling out of them. The rest of them scream while you hack them to pieces. You are "
+        + "able to take their food, water, and money. ";
+        getWater();
+        character.money += 4;
+        eventText.innerHTML = "<button type=\"button\" onclick=\"leaveFamily()\"> Leave</button\> ";
+        character.swordKills += 6;
+    }
+    else
+    {
+        if (character.hasSword)
+        {
+            gameText.innerHTML = "You pull out your gun and shoot them each in turn. Their bodies fall to the floor one by one. You are able to take their food, water, and money. ";
+            getWater();
+            character.money += 4;
+            eventText.innerHTML = "<button type=\"button\" onclick=\"leaveFamily()\"> Leave</button\> ";
+        }
+    }
+}
+
+function leaveFamily()
+{
+    displayMessage = "You leave the house. ";
+    addCurrentTileMessage();
+    gameText.innerHTML = displayMessage;
+    eventText.innerHTML = "<button type=\"button\" onclick=\"forceEntryToResidence()\"> Try To Force The Door</button>";
+    movementLock = false;
+}
+
+function pullSword()
+{
+    if (character.strength >= 20)
+    {
+        character.hasSword = true;
+        gameText.innerHTML = "You successfully free the sword from the stone! Your body suddenly feels lighter.";
+        eventText.innerHTML = "";
+        character.maxHydration += 5;
+        character.extraWater += 1;
+        character.Strength += 1;
+        tileEvents[11][9] = "";
+        tileMessages[11][9] = "You see a large stone. It has a hole in the center of it.";
+    }
+    else
+    {
+        gameText.innerHTML = "The sword seems to be fairly securely lodged in the stone.";
+        character.stamina -= 5;
+        if (character.stamina < 0)
+        {
+            character.stamina = 0;
+        }
+    }
+}
+
+function attackGuards()
+{
+    if (character.hasSword == true)
+    {
+        if (character.swordKills >= 6)
+        {
+            gameText.innerHTML = "You approach the guards with your sword drawn. They ask you what you think you're doing. You're deaf to their questions. You swing the sword. After the first strike, one of "
+            + "the guards is dead. The other guards fire their rifles at you, but the sword seems to prevent their bullets from landing. You slaughter the guards. Not one escapes. You take their money and supplies. ";
+            getWater();
+            character.money += 400;
+            character.swordKills += 30;
+            tileMessages[3][6] = "You see a bridge ahead of you. Bodies litter the ground around it. ";
+            tileEvents[3][6] = "<button type=\"button\" onclick=\"talkToGuards()\"> Talk To Guards</button>";
+            eventText.innerHTML = "<button type=\"button\" onclick=\"talkToGuards()\"> Talk To Guards</button>";
+            guardsAlive = false;
+            charMap[6][2] = 'D';
+            charMap[6][4] = 'D';
+        }
+        else
+        {
+            death();
+            gameText.innerHTML = "You run at the guards with your sword. You manage to slash one person before you are shot by the rest of them. The person you stabbed bled to death over the course of the next few hours. Their family and friends will forever miss them.";
+        }
+    }
+    else if (character.ammunition > 0)
+    {
+        death();
+        gameText.innerHTML = "You fire at the guards with your pistol from a distance. They fire back and you are killed. The person you shot bled to death over the course of the next few hours. Their family and friends will forever miss them.";
+    }
+    else
+    {
+        gameText.innerHTML = "You don't really have anything to attack the guards with. ";
+    }
+}
+
+function investigateMassGrave()
+{
+    gameText.innerHTML = "When you search the pit, you find the desiccated remains of hundreds of people. There are likely more, but you lose the urge to search more closely after the first few minutes. ";
+}
+
+function investigateStone()
+{
+    gameText.innerHTML = "The structure appears to be a ruin of some kind. Whatever this building's purpose once was, the entrance is now caved in. ";
+}
+
+function searchChildBody()
+{
+    gameText.innerHTML = "The body has had its eyes removed and both hands broken. The chain appears to have been held in place around "
+    + "the child's neck by two spikes that were driven through their neck. The chain is attached at the other end to a heavy object that was buried in the sand. You don't find anything you feel like taking. ";
+}
+
+function savageMan()
+{
+    if (character.hasSword == true && character.swordKills > 0)
+    {
+        movementLock = true;
+        gameText.innerHTML = "As you approach the person, they begin to pull out their pistol, and you pull out your sword in response. They fire their pistol at you, and your sword seems to stop the bullets. They fall to the ground and beg you for mercy. \"I've been wandering the desert for days with no water. Please show me mercy! I only wanted water. \"";
+        eventText.innerHTML = "<button type=\"button\" onclick=\"Mercy()\"> Mercy</button> <button type=\"button\" onclick=\"Murder()\"> Murder</button>";
+    }
+    else
+    {
+        death();
+        gameText.innerHTML = "As you approach the person, they pull out their pistol and fire it at you. You are hit in the leg and the chest. You die."
+    }
+}
+
+function giveWaterToSavage()
+{
+    gameText.innerHTML = "He thanks you very much for your mercy and your kindness. ";
+    eventText.innerHTML = "";
+    character.water -= 1;
+    movementLock = false;
+}
+
+function leaveSavage()
+{
+    gameText.innerHTML = "He thanks you for your mercy and leaves. ";
+    eventText.innerHTML = "";
+    character.hasEnemy = true;
+    movementLock = false;
+}
+
+function Mercy()
+{
+    gameText.innerHTML = "";
+    eventText.innerHTML = "<button type=\"button\" onclick=\"leaveSavage()\"> Leave</button><button type=\"button\" onclick=\"giveWaterToSavage()\"> Give Water</button>";
+    tileMessages[6][9] = "";
+    tileEvents[6][9] = "";
+}
+
+function Murder()
+{
+    gameText.innerHTML = "You kill them. No one that ever knew them will ever know what happened to them. ";
+    eventText.innerHTML = "";
+    tileMessages[6][9] = "";
+    tileEvents[6][9] = "";
+    movementLock = false;
+    character.swordKills += 1;
+}
+
+function savageHunter()
+{
+    if (savageHunterAlive == true)
+    {
+        gameText.innerHTML = "You see a person holding a rifle and wearing a strange outfit. \"Hello there! I've just been enjoying a spot of hunting this fine day. The weather is warm, the ground is soft, and I've never seen such great sport as these savages. What are you doing out here? \"";
+        eventText.innerHTML = "<button type=\"button\" onclick=\"answerSavageHunter()\"> Answer</button> <button type=\"button\" onclick=\"attackSavageHunter()\"> Attack Them</button>";
+    }
+}
+
+function answerSavageHunter()
+{
+    if (character.hydration > 20)
+    {
+        gameText.innerHTML = "You tell them that you are wandering the desert. He responds with enthusiasm, \"A noble adventure indeed! I'll let you get on with it.\"";
+    }
+    else
+    {
+        gameText.innerHTML = "You tell them that you have been wandering the desert and are very thirsty. He responds \"Ah, you poor fellow! Here, have some water. \"";
+        getWater();
+    }
+}
+
+function attackSavageHunter()
+{
+    if (character.hasSword == true)
+    {
+        if (character.swordKills > 6)
+        {
+            gameText.innerHTML = "As you approach them with your sword, he guesses what you are about to do. He shoots you 4 times. The sword seems to protect you from the bullets, and you hack them to pieces while he begs you for mercy. Not a soul will ever see them again. You take his supplies. ";
+            tileMessages[8][5] = "You see a body lying on the ground. ";
+            tileEvents[8][5] = "";
+            character.extraWater += 1;
+            character.swordKills += 1;
+            getWater();
+            eventText.innerHTML = "";
+        }
+        else
+        {
+            death();
+            gameText.innerHTML = "As you approach them with your sword, he guesses what you are about to do. He shoots you 4 times. Twice chest, once in the shoulder, and once in the head. He buries your body. This isn't comforting to you, as you are already dead. ";
+        }
+    }
+    else if (character.ammunition > 0)
+    {
+        death();
+        gameText.innerHTML = "As you begin to pull out your pistol, he sees what you are doing and shoots you 4 times. Three times in the chest and once in the shoulder. He buries your body. This isn't comforting to you, as you are already dead. ";
+    }
+    else
+    {
+        gameText.innerHTML = "You don't really have anything to attack him with. ";
+    }
+}
+
+function restOutside()
+{
+    if (character.hasEnemy == true)
+    {
+        death();
+        gameText.innerHTML = "Someone slits your throat in the night. Looks like you made an enemy. " + gameText.innerHTML;
+    }
+    else
+    {
+        character.lookedForWork = false;
+        character.stamina = 100;
+        character.health += character.hydration;
+        if (character.health > 100)
+            character.health = 100;
+        var temporary_Integer = 30 - character.hydration;
+        if (temporary_Integer >= 30)
+            character.stamina -= temporary_Integer;
+        character.hydration -= 40;
+        takeHydrationDamage();
+    }
+}
+
+function takeHydrationDamage()
+{
+    if (character.hydration < 0)
+    {
+        character.health += character.hydration;
+        character.hydration = 0;
+        if (character.health <= 0)
+        {
+            death();
+        }
+    }
+}
+</script>
+
+</body>
+</html> 
